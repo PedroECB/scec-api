@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SCEC.API.Data;
+using SCEC.API.Repository;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace SCEC.API
 {
@@ -26,6 +30,9 @@ namespace SCEC.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<DataContext>(options => options.UseNpgsql(Configuration.GetConnectionString("dbConnectionString")));
+            services.AddScoped<DataContext, DataContext>();
+            services.AddScoped<UserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,9 +17,9 @@ namespace SCEC.API.Controllers
     {
         private UserRepository _userRepository;
 
-        public UserController()
+        public UserController(UserRepository userRepository)
         {
-            _userRepository = new UserRepository();
+            _userRepository = userRepository;
         }
 
         // GET: api/<UserController>/all
@@ -27,8 +27,15 @@ namespace SCEC.API.Controllers
         [Route("All")]
         public async Task<ActionResult<IEnumerable<User>>> ListAll()
         {
-            var users = _userRepository.GetAll();
-            return Ok(users);
+            try
+            {
+                var users = await _userRepository.GetAll();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
         // GET: api/<UserController>

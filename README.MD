@@ -1,6 +1,6 @@
- # SCEC - (Sistema de Consulta de Entradas Cadavéricas)
+# SCEC - (Sistema de Consulta de Entradas Cadavéricas)
 
- ### Sistema de registro e consulta de entradas cadavéricas em unidades de departamento de polícia técnica do estado da Bahia.
+### Sistema de registro e consulta de entradas cadavéricas em unidades de departamento de polícia técnica do estado da Bahia.
 
 > **Observação Importante:** Todas as informações contidas neste sistema são estritamente fictícias e foram criadas exclusivamente para fins de estudos relacionados à prática de desenvolvimento de software e de demonstração. Nenhuma das informações aqui apresentadas se refere a pessoas, entidades ou eventos reais. Qualquer semelhança com situações reais é puramente coincidência. Esta aplicação não tem a intenção de violar direitos de privacidade, direitos de imagem ou quaisquer outros direitos legais. Se você acredita que alguma informação aqui apresentada infringe seus direitos ou causa qualquer preocupação, entre em contato comigo imediatamente para que eu possa tomar as medidas adequadas. Agradeço a compreensão.
 
@@ -18,7 +18,7 @@
 - Registro de logs de acesso à área administrativa;
 - Visualização de nota de entrada cadavérica via PDF;
 - Anexo de documentos à nota de entrada cadavérica (visualização restrita);
-- Endpoint de notificação para integração com sistemas de notificação hospitalares;
+- Endpoint de notificação para integração com sistemas de notificações hospitalares;
 - Acompanhamento de status de entradas cadavéricas;
 - Auditoria de acessos (Registro de todas as ações realizadas na aplicação para fins de auditoria e conformidade);
 

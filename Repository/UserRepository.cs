@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SCEC.API.Models;
+using SCEC.API.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace SCEC.API.Repository
 {
     public class UserRepository : IRepository<User>
     {
+        private DataContext _context;
+
+        public UserRepository(DataContext context)
+        {
+            _context = context;
+        }
 
         public void Add(User user)
         {
@@ -24,14 +33,10 @@ namespace SCEC.API.Repository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            Random randomGenerator = new Random();
-            List<User> users = new List<User>();
-            users.Add(new User() { Id = randomGenerator.Next(100), Name = "Pedro Henrique", BirthDate = DateTime.Now });
-            users.Add(new User() { Id = randomGenerator.Next(100), Name = "Paulo Silveira", BirthDate = DateTime.Now });
-            users.Add(new User() { Id = randomGenerator.Next(100), Name = "Silva Martins", BirthDate = DateTime.Now });
-
+            IEnumerable<User> users = new List<User>();
+            users = await _context.Users.AsNoTracking().ToListAsync();
             return users;
         }
 
