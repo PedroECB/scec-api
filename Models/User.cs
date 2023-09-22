@@ -32,6 +32,7 @@ namespace SCEC.API.Models
         public string Salt { get; set; }
 
         [Column("created_at")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedAt { get; set; }
 
         [Column("enabled")]

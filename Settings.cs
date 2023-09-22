@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,9 +28,30 @@ namespace SCEC.API
 
         public class URL
         {
-            public const string URL_VIACEP_API = "https://viacep.com.br"; 
+            public const string URL_VIACEP_API = "https://viacep.com.br";
         }
+
+        public class ROLES
+        {
+            public const string ADMIN = "ADMIN";
+            public const string COLLABORATOR = "COLLABORATOR";
+        }
+
+        public enum codeEnum
+        {
+            [Description("Usuário inexistente ou senha inválida!")]
+            LoginError = 1
+        }
+
     }
 
+    public static class codeEnumExtensions
+    {
+        public static string ToDescriptionString(this Settings.codeEnum val)
+        {
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attributes.Length > 0 ? attributes[0].Description : string.Empty;
+        }
+    }
 
 }

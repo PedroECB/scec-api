@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SCEC.API.Data;
+using SCEC.API.Models;
+using SCEC.API.Models.DTO;
+using SimpleCrypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,20 +18,30 @@ namespace SCEC.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        // GET: api/<LoginController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // POST api/<LoginController>
         [HttpPost]
         [Route("auth")]
         [AllowAnonymous]
-        public IEnumerable<string> Post([FromServices] DataContext dbContext, [FromBody] object loginDto)
+        public async Task<ActionResult<object>>  Post([FromServices] DataContext dbContext, [FromBody] LoginDTO loginDTO)
         {
-            var teste = loginDto;
+            if (!ModelState.IsValid)
+                return BadRequest(new { Message = "Parâmetros de login inválidos!" });
+
+            User user = await dbContext.Users.Where(x => x.Email.Equals(loginDTO.Email) && x.Enabled.Equals("S"))
+                        .AsNoTracking()
+                        .Select(x => new User {Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password, Salt = x.Salt })
+                        .FirstOrDefaultAsync();
+
+            if (user == null)
+                return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
+
+            var crypt = new PBKDF2();
+
+            if(string.Compare(user.Password, crypt.Compute(loginDTO.Senha, user.Salt)) != 0)
+                return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
+
+
+            var teste = loginDTO;
             return new string[] { "value1", "value2" };
         }
 
