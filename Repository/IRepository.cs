@@ -8,8 +8,8 @@ namespace SCEC.API.Repository
     interface IRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAll();
-        T GetById(int id);
-        void Add(T entity);
+        Task<T> GetById(int id);
+        Task<T> Add(T entity);
         void Update(T entity);
         void Delete(int id);
     }

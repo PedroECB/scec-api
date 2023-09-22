@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using SCEC.API.Models;
 using SCEC.API.Repository;
-
+using SCEC.API.Models.DTO;
+using System.Security.Cryptography;
+using SimpleCrypto;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -47,27 +49,62 @@ namespace SCEC.API.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<User>> Get(int id)
         {
-            return "value";
+            try
+            {
+                User user = await _userRepository.GetById(id);
+
+                if (user != null)
+                    return Ok(user);
+                else
+                    return Ok(new { });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("create")]
+        public async Task<ActionResult<object>> Post([FromBody] AddUserDTO userDTO)
         {
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            try
+            {
+                var crypto = new PBKDF2();
+                User user = new User();
+                user.Email = userDTO.Email;
+                user.Name = userDTO.Name;
+                user.Password = crypto.Compute(userDTO.Senha);
+                user.Salt = crypto.Salt;
+                user.Enabled = "S";
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                await _userRepository.Add(user);
+                return Ok(new { message = "Usuário cadastrado com sucesso!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Falha ao criar usuário: {ex.Message + ex.InnerException}" });
+            }
+
+            return new { Ok = 12 };
+            }
+
+            // PUT api/<UserController>/5
+            [HttpPut("{id}")]
+            public void Put(int id, [FromBody] string value)
+            {
+            }
+
+            // DELETE api/<UserController>/5
+            [HttpDelete("{id}")]
+            public void Delete(int id)
+            {
+            }
         }
     }
-}

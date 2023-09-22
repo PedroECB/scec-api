@@ -18,9 +18,11 @@ namespace SCEC.API.Repository
             _context = context;
         }
 
-        public void Add(User user)
+        public async Task<User> Add(User user)
         {
-            throw new NotImplementedException();
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public void Delete(int id)
@@ -28,9 +30,22 @@ namespace SCEC.API.Repository
             throw new NotImplementedException();
         }
 
-        public User GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            throw new NotImplementedException();
+            User user = await _context.Users.Where(x => x.Id == id)
+                        .AsNoTracking()
+                        .Select(x => new User()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Uuid = x.Uuid,
+                            Email = x.Email,
+                            Enabled = x.Enabled,
+                            CreatedAt = x.CreatedAt
+                        })
+                        .FirstOrDefaultAsync();
+
+            return user;
         }
 
         public async Task<IEnumerable<User>> GetAll()
