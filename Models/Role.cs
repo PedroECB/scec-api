@@ -13,7 +13,7 @@ namespace SCEC.API.Models
     {
         [Key]
         [Column("id_role")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Column("role")]
         public string RoleDescription{ get; set; }
@@ -23,8 +23,5 @@ namespace SCEC.API.Models
 
         [Column("enabled")]
         public string Enabled { get; set; }
-
-        [NotMapped]
-        public string Roles { get; set; }
     }
 }

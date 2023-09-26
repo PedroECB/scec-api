@@ -13,7 +13,7 @@ namespace SCEC.API.Models
     {
         [Key]
         [Column("id_user")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Column("uuid")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

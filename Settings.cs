@@ -40,7 +40,10 @@ namespace SCEC.API
         public enum codeEnum
         {
             [Description("Usuário inexistente ou senha inválida!")]
-            LoginError = 1
+            LoginError = 1,
+        
+            [Description("Usuário sem permissões ativas!")]
+            RolesNotFoundError = 2
         }
 
     }
