@@ -59,6 +59,8 @@ namespace SCEC.API
             services.AddScoped<DataContext, DataContext>();
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<RoleRepository, RoleRepository>();
+            services.AddScoped<LogAcessRepository, LogAcessRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

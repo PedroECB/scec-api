@@ -54,7 +54,11 @@ namespace SCEC.API.Controllers
                 user.Roles = string.Join(",", usersRoles.ToArray());
                 
                 string token = TokenService.GenerateToken(user);
-
+                
+                LogAcess logAcessUser = new LogAcess(user.Id, null);
+                dbContext.logAcesses.Add(logAcessUser);
+                await dbContext.SaveChangesAsync();
+                
                 return Ok(new { user.Name, user.Email, user.Id, Token = token, Roles = usersRoles });
             }
             catch (Exception ex)

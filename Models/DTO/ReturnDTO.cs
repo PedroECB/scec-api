@@ -13,7 +13,6 @@ namespace SCEC.API.Models.DTO
 
         public ReturnDTO()
         {
-
         }
     }
 }

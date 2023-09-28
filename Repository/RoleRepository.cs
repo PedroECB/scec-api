@@ -46,7 +46,7 @@ namespace SCEC.API.Repository
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public async Task<Role> Delete(Role role)
         {
             throw new NotImplementedException();
         }
