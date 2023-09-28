@@ -58,6 +58,7 @@ namespace SCEC.API
             services.AddDbContext<DataContext>(options => options.UseNpgsql(Configuration.GetConnectionString("dbConnectionString")));
             services.AddScoped<DataContext, DataContext>();
             services.AddScoped<UserRepository, UserRepository>();
+            services.AddScoped<RoleRepository, RoleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,7 +73,7 @@ namespace SCEC.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

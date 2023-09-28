@@ -55,7 +55,7 @@ namespace SCEC.API.Controllers
                 
                 string token = TokenService.GenerateToken(user);
 
-                return Ok(new { user.Name, user.Email, user.Id, Token = token });
+                return Ok(new { user.Name, user.Email, user.Id, Token = token, Roles = usersRoles });
             }
             catch (Exception ex)
             {

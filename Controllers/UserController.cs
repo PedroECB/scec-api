@@ -8,7 +8,9 @@ using SCEC.API.Repository;
 using SCEC.API.Models.DTO;
 using System.Security.Cryptography;
 using SimpleCrypto;
-
+using Microsoft.AspNetCore.Authorization;
+using SCEC.API;
+using static SCEC.API.Settings;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SCEC.API.Controllers
@@ -27,6 +29,7 @@ namespace SCEC.API.Controllers
         // GET: api/<UserController>/all
         [HttpGet]
         [Route("All")]
+        [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
         public async Task<ActionResult<IEnumerable<User>>> ListAll()
         {
             try
@@ -40,15 +43,9 @@ namespace SCEC.API.Controllers
             }
         }
 
-        // GET: api/<UserController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         // GET api/<UserController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
         public async Task<ActionResult<User>> Get(int id)
         {
             try
@@ -69,6 +66,7 @@ namespace SCEC.API.Controllers
         // POST api/<UserController>
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
         public async Task<ActionResult<object>> Post([FromBody] AddUserDTO userDTO)
         {
             if (!ModelState.IsValid)
@@ -91,20 +89,64 @@ namespace SCEC.API.Controllers
             {
                 return BadRequest(new { message = $"Falha ao criar usuário: {ex.Message + ex.InnerException}" });
             }
+        }
 
-            return new { Ok = 12 };
-            }
+        // PUT api/<UserController>/5
+        [HttpPut("{id}")]
+        [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
 
-            // PUT api/<UserController>/5
-            [HttpPut("{id}")]
-            public void Put(int id, [FromBody] string value)
+        // DELETE api/<UserController>/5
+        [HttpDelete("{id}")]
+        [Authorize(Roles = ROLES.SUPER_ADMIN)]
+        public async Task<ActionResult<object>> Delete(int id)
+        {
+            try
             {
-            }
+                User user = await _userRepository.GetById(id);
 
-            // DELETE api/<UserController>/5
-            [HttpDelete("{id}")]
-            public void Delete(int id)
+                if (user == null || user.Enabled == "N")
+                    return BadRequest(new { Message = "Falha ao inativar usuário! Usuário não encontrado." });
+
+                await _userRepository.Delete(user);
+
+                return Ok(new { Message = "Usuário inativado com sucesso!" });
+            }
+            catch (Exception ex)
             {
+                return BadRequest(new { Message = ex.InnerException?.Message != null ? ex.InnerException.Message : ex.Message });
             }
         }
+
+        // GET api/<UserController>/resetpassword/5
+        [HttpGet("resetpassword/{idUser:int}")]
+        [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
+        public async Task<ActionResult<object>> ResetPassword(int idUser)
+        {
+            try
+            {
+                User user = await _userRepository.GetById(idUser);
+
+                if (user == null)
+                    return BadRequest(new { Message = "Usuário não encontrado!" });
+
+                var crypto = new PBKDF2();
+                user.Password = crypto.Compute(user.Email);
+                user.Salt = crypto.Salt;
+                user.LastUpdate = DateTime.Now;
+
+                await _userRepository.Update(user);
+
+                return Ok(new { Message = "Senha resetada com sucesso!" }); ;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.InnerException?.Message != null ? ex.InnerException.Message : ex.Message });
+            }
+        }
+
+
     }
+}

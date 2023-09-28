@@ -38,6 +38,9 @@ namespace SCEC.API.Models
         [Column("enabled")]
         public string Enabled { get; set; }
 
+        [Column("last_update")]
+        public DateTime? LastUpdate { get; set; }
+
         [NotMapped]
         public string Roles { get; set; }
     }

@@ -35,13 +35,17 @@ namespace SCEC.API
         {
             public const string ADMIN = "ADMIN";
             public const string COLLABORATOR = "COLLABORATOR";
+            public const string SUPER_ADMIN = "SUPER_ADMIN";
+            public const string ADMIN_AND_SUPERADMIN = ADMIN + "," + SUPER_ADMIN;
+
+
         }
 
         public enum codeEnum
         {
             [Description("Usuário inexistente ou senha inválida!")]
             LoginError = 1,
-        
+
             [Description("Usuário sem permissões ativas!")]
             RolesNotFoundError = 2
         }

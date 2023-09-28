@@ -25,15 +25,19 @@ namespace SCEC.API.Repository
             return user;
         }
 
-        public void Delete(int id)
+        public async Task<User> Delete(User user)
         {
-            throw new NotImplementedException();
+            user.Enabled = "N";
+            user.LastUpdate = DateTime.Now;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task<User> GetById(int id)
         {
             User user = await _context.Users.Where(x => x.Id == id)
-                        .AsNoTracking()
                         .Select(x => new User()
                         {
                             Id = x.Id,
@@ -56,9 +60,12 @@ namespace SCEC.API.Repository
         }
 
 
-        public void Update(User entity)
+        public async Task<User> Update(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
     }
 }
