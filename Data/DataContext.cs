@@ -24,5 +24,6 @@ namespace SCEC.API.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UsersRoles { get; set; }
         public DbSet<LogAcess> logAcesses { get; set; }
+        public DbSet<Module> Modules { get; set; }
     }
 }
