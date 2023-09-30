@@ -14,6 +14,8 @@ namespace SCEC.API
         {
             public const string SECRET = "d7a789e1409c41c5806f90ffb3b20501";
             public const string SECRET_INTEGRATION = "####";
+            public const string FLAG_YES = "S";
+            public const string FLAG_NO = "N";
         }
 
         public class KEYS

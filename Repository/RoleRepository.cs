@@ -32,7 +32,8 @@ namespace SCEC.API.Repository
 
         async Task<Role> IRepository<Role>.GetById(int id)
         {
-            Role role = await _context.Roles.Where(x => x.Id == id).FirstOrDefaultAsync();
+            Role role = await _context.Roles.Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
             return role;
         }
 

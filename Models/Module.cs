@@ -16,8 +16,8 @@ namespace SCEC.API.Models
         public long IdModule { get; set; }
 
         [ForeignKey("Module")]
-        [Column("parent_id")]
-        public long ParentId { get; set; }
+        [Column("id_parent")]
+        public long? ParentId { get; set; }
 
         [Column("description")]
         public string Description{ get; set; }
@@ -36,6 +36,9 @@ namespace SCEC.API.Models
 
         [Column("order")]
         public int Order { get; set; }
+
+        [NotMapped]
+        public List<Module> Nested { get; set; }
 
     }
 }

@@ -107,7 +107,7 @@ namespace SCEC.API.Controllers
             {
                 User user = await _userRepository.GetById(id);
 
-                if (user == null || user.Enabled == "N")
+                if (user == null || user.Enabled == CONSTANTS.FLAG_NO)
                     return BadRequest(new { Message = "Falha ao inativar usuário! Usuário não encontrado." });
 
                 await _userRepository.Delete(user);

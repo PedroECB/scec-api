@@ -6,6 +6,7 @@ using SCEC.API.Models;
 using SCEC.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static SCEC.API.Settings;
 
 namespace SCEC.API.Repository
 {
@@ -27,7 +28,7 @@ namespace SCEC.API.Repository
 
         public async Task<User> Delete(User user)
         {
-            user.Enabled = "N";
+            user.Enabled = CONSTANTS.FLAG_NO;
             user.LastUpdate = DateTime.Now;
 
             _context.Users.Update(user);
