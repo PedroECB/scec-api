@@ -7,6 +7,7 @@ using SCEC.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static SCEC.API.Settings;
+using SimpleCrypto;
 
 namespace SCEC.API.Repository
 {
@@ -18,6 +19,8 @@ namespace SCEC.API.Repository
         {
             _context = context;
         }
+
+        #region BASIC METHODS
 
         public async Task<User> Add(User user)
         {
@@ -39,16 +42,8 @@ namespace SCEC.API.Repository
         public async Task<User> GetById(int id)
         {
             User user = await _context.Users.Where(x => x.Id == id)
-                        .Select(x => new User()
-                        {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Uuid = x.Uuid,
-                            Email = x.Email,
-                            Enabled = x.Enabled,
-                            CreatedAt = x.CreatedAt
-                        })
-                        .FirstOrDefaultAsync();
+                            .Select(x => new User() { Id = x.Id, Name = x.Name, Uuid = x.Uuid, Email = x.Email, Enabled = x.Enabled, CreatedAt = x.CreatedAt })
+                            .FirstOrDefaultAsync();
 
             return user;
         }
@@ -68,5 +63,61 @@ namespace SCEC.API.Repository
 
             return user;
         }
+
+        #endregion
+
+        #region OTHERS METHODS
+
+        /// <summary>
+        /// Method to find user by email (AsNoTracking)
+        /// </summary>
+        /// <param name="userEmail">User e-mail adress.</param>
+        /// <returns>
+        /// (User) user found or null when not found
+        /// </returns>
+        public async Task<User> GetByEmail(string userEmail)
+        {
+            User user = await _context.Users.Where(x => x.Email.Equals(userEmail) && x.Enabled.Equals(CONSTANTS.FLAG_YES))
+                                        .AsNoTracking()
+                                        .Select(x => new User { Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password, Salt = x.Salt })
+                                        .FirstOrDefaultAsync();
+            return user;
+        }
+
+        /// <summary>
+        /// Alternative method to find user by id, returning full columns of entity
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>
+        /// (User) user found or null when not found
+        /// </returns>
+        public async Task<User> GetUserByIdFullColumns(int id)
+        {
+            User user = await _context.Users.Where(x => x.Id == id)
+                 .Select(x => new User() { Id = x.Id, Name = x.Name, Uuid = x.Uuid, Email = x.Email, Enabled = x.Enabled, CreatedAt = x.CreatedAt, Password = x.Password, Salt = x.Salt, LastUpdate = x.LastUpdate })
+                 .FirstOrDefaultAsync();
+            return user;
+        }
+
+        #endregion
+
+        #region USER UTILS
+
+        /// <summary>
+        /// Method to set user user password
+        /// </summary>
+        /// <param name="user">User object will have the password changed</param>
+        /// <returns>
+        /// void
+        /// </returns>
+        public void SetPassword(ref User user, string newPassword)
+        {
+            PBKDF2 crypto = new PBKDF2();
+            user.Password = crypto.Compute(newPassword);
+            user.Salt = crypto.Salt;
+            user.LastUpdate = DateTime.Now;
+        }
+
+        #endregion
     }
 }

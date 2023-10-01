@@ -23,11 +23,13 @@ namespace SCEC.API.Controllers
     {
         private ModuleRepository _moduleRepository;
         private LogAcessRepository _logAcessRepository;
+        private UserRepository _userRepository;
 
-        public LoginController(ModuleRepository moduleRepository, LogAcessRepository logAcessRepository)
+        public LoginController(ModuleRepository moduleRepository, LogAcessRepository logAcessRepository, UserRepository userRepository)
         {
             _moduleRepository = moduleRepository;
             _logAcessRepository = logAcessRepository;
+            _userRepository = userRepository;
         }
 
         // POST api/<LoginController>
@@ -41,10 +43,7 @@ namespace SCEC.API.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new { Message = "Parâmetros de login inválidos!" });
 
-                User user = await dbContext.Users.Where(x => x.Email.Equals(loginDTO.Email) && x.Enabled.Equals(CONSTANTS.FLAG_YES))
-                            .AsNoTracking()
-                            .Select(x => new User { Id = x.Id, Name = x.Name, Email = x.Email, Password = x.Password, Salt = x.Salt })
-                            .FirstOrDefaultAsync();
+                User user = await _userRepository.GetByEmail(loginDTO.Email);
 
                 if (user == null)
                     return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
@@ -52,7 +51,7 @@ namespace SCEC.API.Controllers
                 //Password validation
                 var crypt = new PBKDF2();
 
-                if (string.Compare(user.Password, crypt.Compute(loginDTO.Senha, user.Salt)) != 0)
+                if (string.Compare(user.Password, crypt.Compute(loginDTO.Password, user.Salt)) != 0)
                     return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
 
                 //Getting roles
@@ -66,7 +65,6 @@ namespace SCEC.API.Controllers
 
                 //Getting modules by roles
                 var modules = await _moduleRepository.GetModulesByRole(usersRoles.Select(x => x.IdRole).ToList());
-
                 user.Roles = string.Join(",", usersRoles.Select(x=> x.RoleDescription).ToArray());
                 
                 string token = TokenService.GenerateToken(user);

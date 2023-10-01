@@ -49,7 +49,10 @@ namespace SCEC.API
             LoginError = 1,
 
             [Description("Usuário sem permissões ativas!")]
-            RolesNotFoundError = 2
+            RolesNotFoundError = 2,
+
+            [Description("Usuário não encontrado!")]
+            UserNotFoundError = 3
         }
 
     }

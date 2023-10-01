@@ -17,6 +17,6 @@ namespace SCEC.API.Models.DTO
         public string Name { get; set; }
 
         [Required]
-        public string Senha { get; set; }
+        public string Password { get; set; }
     }
 }

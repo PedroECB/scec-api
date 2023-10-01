@@ -11,6 +11,8 @@ using SimpleCrypto;
 using Microsoft.AspNetCore.Authorization;
 using SCEC.API;
 using static SCEC.API.Settings;
+using System.Security.Claims;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SCEC.API.Controllers
@@ -74,15 +76,14 @@ namespace SCEC.API.Controllers
 
             try
             {
-                var crypto = new PBKDF2();
                 User user = new User();
                 user.Email = userDTO.Email;
                 user.Name = userDTO.Name;
-                user.Password = crypto.Compute(userDTO.Senha);
-                user.Salt = crypto.Salt;
                 user.Enabled = "S";
 
+                _userRepository.SetPassword(ref user, userDTO.Password);
                 await _userRepository.Add(user);
+
                 return Ok(new { message = "Usuário cadastrado com sucesso!" });
             }
             catch (Exception ex)
@@ -130,13 +131,9 @@ namespace SCEC.API.Controllers
                 User user = await _userRepository.GetById(idUser);
 
                 if (user == null)
-                    return BadRequest(new { Message = "Usuário não encontrado!" });
+                    return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
 
-                var crypto = new PBKDF2();
-                user.Password = crypto.Compute(user.Email);
-                user.Salt = crypto.Salt;
-                user.LastUpdate = DateTime.Now;
-
+                _userRepository.SetPassword(ref user, user.Email);
                 await _userRepository.Update(user);
 
                 return Ok(new { Message = "Senha resetada com sucesso!" }); ;
@@ -145,6 +142,28 @@ namespace SCEC.API.Controllers
             {
                 return BadRequest(new { Message = ex.InnerException?.Message != null ? ex.InnerException.Message : ex.Message });
             }
+        }
+
+        [HttpPost("alterpassword")]
+        [Authorize]
+        public async Task<object> AlterPassword(AlterPasswordDTO alterPassword)
+        {
+            //obter id do usuário pelo claims do token
+            int idUser = int.Parse(User.FindFirstValue(ClaimTypes.Sid));
+            User user = await _userRepository.GetUserByIdFullColumns(idUser);
+
+            if (user == null)
+                return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
+
+            PBKDF2 crypto = new PBKDF2();
+
+            if (string.Compare(user.Password, crypto.Compute(alterPassword.CurrentPassword, user.Salt)) != 0)
+                return BadRequest(new { Message = "A senha atual informada é inválida!" });
+
+            _userRepository.SetPassword(ref user, alterPassword.NewPassword);
+            await _userRepository.Update(user);
+
+            return Ok(new { Message = "Senha alterada com sucesso!" }); ;
         }
 
 
