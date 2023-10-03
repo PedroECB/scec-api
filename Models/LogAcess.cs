@@ -27,11 +27,15 @@ namespace SCEC.API.Models
         [Column("ip")]
         public string Ip { get; set; }
 
-        public LogAcess(long idUser, string ip = null)
+        [Column("user_agent")]
+        public string UserAgent { get; set; }
+
+        public LogAcess(long idUser, string ip = null, string userAgent = null)
         {
-            this.IdUser = idUser;
-            this.Ip = ip;
-            this.DtAcess = DateTime.Now;
+            IdUser = idUser;
+            Ip = ip;
+            UserAgent = userAgent;
+            DtAcess = DateTime.Now;
         }
     }
 }

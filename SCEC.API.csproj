@@ -7,7 +7,7 @@
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Models\Filters\" />
-    <Folder Include="Services\" />
+    <Folder Include="System\" />
   </ItemGroup>
 
   <ItemGroup>

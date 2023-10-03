@@ -61,15 +61,14 @@ namespace SCEC.API.Controllers
                                 .ToList();
 
                 if(usersRoles.Count() == 0)
-                    return BadRequest(new { Message = Settings.codeEnum.RolesNotFoundError.ToDescriptionString() });
+                    return BadRequest(new { Message = Settings.codeEnum.UsersRolesNotFoundError.ToDescriptionString() });
 
                 //Getting modules by roles
                 var modules = await _moduleRepository.GetModulesByRole(usersRoles.Select(x => x.IdRole).ToList());
                 user.Roles = string.Join(",", usersRoles.Select(x=> x.RoleDescription).ToArray());
                 
                 string token = TokenService.GenerateToken(user);
-                
-                await _logAcessRepository.Add(new LogAcess(user.Id, null));
+                await _logAcessRepository.Add(new LogAcess(user.Id, Utils.GetUserIP(HttpContext), Utils.GetUserAgent(HttpContext)));
                 
                 return Ok(new { user.Name, user.Email, user.Id, Token = token, Roles = user.Roles, Modules  = modules });
             }

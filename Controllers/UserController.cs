@@ -144,28 +144,59 @@ namespace SCEC.API.Controllers
             }
         }
 
+        // POST api/<UserController>/alterpassword
         [HttpPost("alterpassword")]
         [Authorize]
         public async Task<object> AlterPassword(AlterPasswordDTO alterPassword)
         {
-            //obter id do usuário pelo claims do token
-            int idUser = int.Parse(User.FindFirstValue(ClaimTypes.Sid));
-            User user = await _userRepository.GetUserByIdFullColumns(idUser);
+            try
+            {
+                int idUser = int.Parse(User.FindFirstValue(ClaimTypes.Sid));
+                User user = await _userRepository.GetUserByIdFullColumns(idUser);
 
-            if (user == null)
-                return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
+                if (user == null)
+                    return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
 
-            PBKDF2 crypto = new PBKDF2();
+                PBKDF2 crypto = new PBKDF2();
 
-            if (string.Compare(user.Password, crypto.Compute(alterPassword.CurrentPassword, user.Salt)) != 0)
-                return BadRequest(new { Message = "A senha atual informada é inválida!" });
+                if (string.Compare(user.Password, crypto.Compute(alterPassword.CurrentPassword, user.Salt)) != 0)
+                    return BadRequest(new { Message = "A senha atual informada é inválida!" });
 
-            _userRepository.SetPassword(ref user, alterPassword.NewPassword);
-            await _userRepository.Update(user);
+                _userRepository.SetPassword(ref user, alterPassword.NewPassword);
+                await _userRepository.Update(user);
 
-            return Ok(new { Message = "Senha alterada com sucesso!" }); ;
+                return Ok(new { Message = "Senha alterada com sucesso!" }); ;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.InnerException?.Message != null ? ex.InnerException.Message : ex.Message });
+            }
         }
 
+
+        [HttpGet]
+        public string GetUserIP()
+        {
+            string ipaddress = (!String.IsNullOrEmpty(HttpContext.Request.Headers["X-Forwarded-For"].ToString())) ? HttpContext.Request.Headers["X-Forwarded-For"].ToString() : HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+
+            if (!string.IsNullOrEmpty(ipaddress))
+            {
+                string[] addresses = ipaddress.Split(',');
+
+                if (addresses.Length != 0)
+                {
+                    ipaddress = addresses[0];
+                }
+
+                ipaddress = (ipaddress == "::1" || ipaddress == "0:0:1" || ipaddress == "0.0.0.1" || ipaddress == "127.0.0.1") ? "187.26.75.200" : ipaddress; // corrige o endereco local de ipv6 para ipv4
+
+                return ipaddress;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }

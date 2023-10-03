@@ -39,8 +39,6 @@ namespace SCEC.API
             public const string COLLABORATOR = "COLLABORATOR";
             public const string SUPER_ADMIN = "SUPER_ADMIN";
             public const string ADMIN_AND_SUPERADMIN = ADMIN + "," + SUPER_ADMIN;
-
-
         }
 
         public enum codeEnum
@@ -49,12 +47,11 @@ namespace SCEC.API
             LoginError = 1,
 
             [Description("Usuário sem permissões ativas!")]
-            RolesNotFoundError = 2,
+            UsersRolesNotFoundError = 2,
 
             [Description("Usuário não encontrado!")]
             UserNotFoundError = 3
         }
-
     }
 
     public static class codeEnumExtensions

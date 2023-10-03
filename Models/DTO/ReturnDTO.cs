@@ -14,5 +14,24 @@ namespace SCEC.API.Models.DTO
         public ReturnDTO()
         {
         }
+
+        public ReturnDTO(string message)
+        {
+            CodRetorno = 0;
+            Message = message;
+        }
+
+        public ReturnDTO(int codRetornno, string message)
+        {
+            CodRetorno = codRetornno;
+            Message = message;
+        }
+
+        public ReturnDTO(int codRetornno, string message, object data)
+        {
+            CodRetorno = codRetornno;
+            Message = message;
+            Data = data;
+        }
     }
 }
