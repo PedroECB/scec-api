@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace SCEC.API
 {
@@ -61,6 +62,11 @@ namespace SCEC.API
             services.AddScoped<RoleRepository, RoleRepository>();
             services.AddScoped<LogAcessRepository, LogAcessRepository>();
             services.AddScoped<ModuleRepository, ModuleRepository>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SCEC API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +79,12 @@ namespace SCEC.API
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCEC API V1");
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -82,6 +94,8 @@ namespace SCEC.API
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

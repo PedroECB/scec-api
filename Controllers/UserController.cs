@@ -173,30 +173,5 @@ namespace SCEC.API.Controllers
             }
         }
 
-
-        [HttpGet]
-        public string GetUserIP()
-        {
-            string ipaddress = (!String.IsNullOrEmpty(HttpContext.Request.Headers["X-Forwarded-For"].ToString())) ? HttpContext.Request.Headers["X-Forwarded-For"].ToString() : HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
-
-            if (!string.IsNullOrEmpty(ipaddress))
-            {
-                string[] addresses = ipaddress.Split(',');
-
-                if (addresses.Length != 0)
-                {
-                    ipaddress = addresses[0];
-                }
-
-                ipaddress = (ipaddress == "::1" || ipaddress == "0:0:1" || ipaddress == "0.0.0.1" || ipaddress == "127.0.0.1") ? "187.26.75.200" : ipaddress; // corrige o endereco local de ipv6 para ipv4
-
-                return ipaddress;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
     }
 }
