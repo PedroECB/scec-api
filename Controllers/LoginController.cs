@@ -17,7 +17,7 @@ using static SCEC.API.Settings;
 
 namespace SCEC.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/login")]
     [ApiController]
     public class LoginController : ControllerBase
     {
@@ -46,13 +46,13 @@ namespace SCEC.API.Controllers
                 User user = await _userRepository.GetByEmail(loginDTO.Email);
 
                 if (user == null)
-                    return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
+                    return BadRequest(new { Message = Settings.CodeEnum.LoginError.ToDescriptionString() });
 
                 //Password validation
                 var crypt = new PBKDF2();
 
                 if (string.Compare(user.Password, crypt.Compute(loginDTO.Password, user.Salt)) != 0)
-                    return BadRequest(new { Message = Settings.codeEnum.LoginError.ToDescriptionString() });
+                    return BadRequest(new { Message = Settings.CodeEnum.LoginError.ToDescriptionString() });
 
                 //Getting roles
                 var usersRoles = dbContext.UsersRoles.Include("Role")
@@ -61,7 +61,7 @@ namespace SCEC.API.Controllers
                                 .ToList();
 
                 if(usersRoles.Count() == 0)
-                    return BadRequest(new { Message = Settings.codeEnum.UsersRolesNotFoundError.ToDescriptionString() });
+                    return BadRequest(new { Message = Settings.CodeEnum.UsersRolesNotFoundError.ToDescriptionString() });
 
                 //Getting modules by roles
                 var modules = await _moduleRepository.GetModulesByRole(usersRoles.Select(x => x.IdRole).ToList());
@@ -69,6 +69,8 @@ namespace SCEC.API.Controllers
                 
                 string token = TokenService.GenerateToken(user);
                 await _logAcessRepository.Add(new LogAcess(user.Id, Utils.GetUserIP(HttpContext), Utils.GetUserAgent(HttpContext)));
+
+                await MailjetService.SendEmail();
                 
                 return Ok(new { user.Name, user.Email, user.Id, Token = token, Roles = user.Roles, Modules  = modules });
             }

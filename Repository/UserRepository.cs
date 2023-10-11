@@ -24,6 +24,7 @@ namespace SCEC.API.Repository
 
         public async Task<User> Add(User user)
         {
+            user.Enabled = "S";
             _context.Add(user);
             await _context.SaveChangesAsync();
             return user;
@@ -104,9 +105,9 @@ namespace SCEC.API.Repository
         #region USER UTILS
 
         /// <summary>
-        /// Method to set user user password
+        /// Method to set user password
         /// </summary>
-        /// <param name="user">User object will have the password changed</param>
+        /// <param name="user">User ref object will have the password changed</param>
         /// <returns>
         /// void
         /// </returns>

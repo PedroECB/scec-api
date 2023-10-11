@@ -43,5 +43,16 @@ namespace SCEC.API.Models
 
         [NotMapped]
         public string Roles { get; set; }
+
+        public User()
+        {
+
+        }
+
+        public User(string name, string email)
+        {
+            Name = name;
+            Email = email;
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace SCEC.API
         public class KEYS
         {
             public const string KEY_EXTERNAL_API = "12$BASC2$#";
+            public const string KEY_PPUBLIC_MAILJET_API = "3dbe8ecf0294eed9f2eaa1abdcaa4407";
         }
 
         public class PATH
@@ -41,8 +42,14 @@ namespace SCEC.API
             public const string ADMIN_AND_SUPERADMIN = ADMIN + "," + SUPER_ADMIN;
         }
 
-        public enum codeEnum
+        public enum CodeEnum
         {
+            [Description("Erro crítico!")]
+            CriticalError = -1,
+
+            [Description("Ok!")]
+            Ok = 0,
+
             [Description("Usuário inexistente ou senha inválida!")]
             LoginError = 1,
 
@@ -56,7 +63,7 @@ namespace SCEC.API
 
     public static class codeEnumExtensions
     {
-        public static string ToDescriptionString(this Settings.codeEnum val)
+        public static string ToDescriptionString(this Settings.CodeEnum val)
         {
             DescriptionAttribute[] attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : string.Empty;

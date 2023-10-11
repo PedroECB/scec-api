@@ -5,29 +5,29 @@ using System.Threading.Tasks;
 
 namespace SCEC.API.Models.DTO
 {
-    public class ReturnDTO
+    public class ResponseDataDTO
     {
         public int CodRetorno { get; set; }
         public string Message { get; set; }
         public object Data { get; set; }
 
-        public ReturnDTO()
+        public ResponseDataDTO()
         {
         }
 
-        public ReturnDTO(string message)
+        public ResponseDataDTO(string message)
         {
             CodRetorno = 0;
             Message = message;
         }
 
-        public ReturnDTO(int codRetornno, string message)
+        public ResponseDataDTO(int codRetornno, string message = null)
         {
             CodRetorno = codRetornno;
             Message = message;
         }
 
-        public ReturnDTO(int codRetornno, string message, object data)
+        public ResponseDataDTO(int codRetornno, string message = null, object data = null)
         {
             CodRetorno = codRetornno;
             Message = message;

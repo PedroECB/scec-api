@@ -17,7 +17,7 @@ using System.Security.Claims;
 
 namespace SCEC.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -55,9 +55,9 @@ namespace SCEC.API.Controllers
                 User user = await _userRepository.GetById(id);
 
                 if (user != null)
-                    return Ok(user);
+                    return Ok(new ResponseDataDTO(0, null, user));
                 else
-                    return Ok(new { });
+                    return Ok(new ResponseDataDTO(0, "Usuário não encontrado"));
             }
             catch (Exception ex)
             {
@@ -76,13 +76,11 @@ namespace SCEC.API.Controllers
 
             try
             {
-                User user = new User();
-                user.Email = userDTO.Email;
-                user.Name = userDTO.Name;
-                user.Enabled = "S";
-
+                User user = new User(userDTO.Name, userDTO.Email);
                 _userRepository.SetPassword(ref user, userDTO.Password);
                 await _userRepository.Add(user);
+                
+                //Implementar aqui fila para disparo de e-mail de notifícação
 
                 return Ok(new { message = "Usuário cadastrado com sucesso!" });
             }
@@ -131,7 +129,7 @@ namespace SCEC.API.Controllers
                 User user = await _userRepository.GetById(idUser);
 
                 if (user == null)
-                    return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
+                    return BadRequest(new { Message = CodeEnum.UserNotFoundError.ToDescriptionString() });
 
                 _userRepository.SetPassword(ref user, user.Email);
                 await _userRepository.Update(user);
@@ -155,7 +153,7 @@ namespace SCEC.API.Controllers
                 User user = await _userRepository.GetUserByIdFullColumns(idUser);
 
                 if (user == null)
-                    return BadRequest(new { Message = codeEnum.UserNotFoundError.ToDescriptionString() });
+                    return BadRequest(new { Message = CodeEnum.UserNotFoundError.ToDescriptionString() });
 
                 PBKDF2 crypto = new PBKDF2();
 
