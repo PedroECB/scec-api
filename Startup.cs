@@ -62,6 +62,7 @@ namespace SCEC.API
             services.AddScoped<RoleRepository, RoleRepository>();
             services.AddScoped<LogAcessRepository, LogAcessRepository>();
             services.AddScoped<ModuleRepository, ModuleRepository>();
+            services.AddScoped<EmailModelRepository, EmailModelRepository>();
 
             services.AddSwaggerGen(c =>
             {

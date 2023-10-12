@@ -22,10 +22,12 @@ namespace SCEC.API.Controllers
     public class UserController : ControllerBase
     {
         private UserRepository _userRepository;
+        private EmailModelRepository _emailModelRepository;
 
-        public UserController(UserRepository userRepository)
+        public UserController(UserRepository userRepository, EmailModelRepository emailModelRepository)
         {
             _userRepository = userRepository;
+            _emailModelRepository = emailModelRepository;
         }
 
         // GET: api/<UserController>/all
@@ -79,8 +81,9 @@ namespace SCEC.API.Controllers
                 User user = new User(userDTO.Name, userDTO.Email);
                 _userRepository.SetPassword(ref user, userDTO.Password);
                 await _userRepository.Add(user);
-                
-                //Implementar aqui fila para disparo de e-mail de notifícação
+
+                //Disparo de email de acesso à conta disponível
+                await _emailModelRepository.SendNewAccountUserEmail(user.Name, user.Email);
 
                 return Ok(new { message = "Usuário cadastrado com sucesso!" });
             }

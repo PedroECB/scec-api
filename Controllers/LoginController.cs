@@ -24,12 +24,15 @@ namespace SCEC.API.Controllers
         private ModuleRepository _moduleRepository;
         private LogAcessRepository _logAcessRepository;
         private UserRepository _userRepository;
+        private EmailModelRepository _emailModelRepository;
 
-        public LoginController(ModuleRepository moduleRepository, LogAcessRepository logAcessRepository, UserRepository userRepository)
+
+        public LoginController(ModuleRepository moduleRepository, LogAcessRepository logAcessRepository, UserRepository userRepository, EmailModelRepository emailModelRepository)
         {
             _moduleRepository = moduleRepository;
             _logAcessRepository = logAcessRepository;
             _userRepository = userRepository;
+            _emailModelRepository = emailModelRepository;
         }
 
         // POST api/<LoginController>
@@ -68,10 +71,13 @@ namespace SCEC.API.Controllers
                 user.Roles = string.Join(",", usersRoles.Select(x=> x.RoleDescription).ToArray());
                 
                 string token = TokenService.GenerateToken(user);
+
+                //Register acess log
                 await _logAcessRepository.Add(new LogAcess(user.Id, Utils.GetUserIP(HttpContext), Utils.GetUserAgent(HttpContext)));
 
-                await MailjetService.SendEmail();
-                
+                //Notify Account access by e-mail
+                //await _emailModelRepository.SendAcessAccountEmail(user.Name, user.Email);
+
                 return Ok(new { user.Name, user.Email, user.Id, Token = token, Roles = user.Roles, Modules  = modules });
             }
             catch (Exception ex)

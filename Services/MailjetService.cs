@@ -11,20 +11,36 @@ namespace SCEC.API.Services
 {
     public class MailjetService
     {
-
-        public static async Task<object> SendEmail()
+        public static async Task<object> SendEmail(string subject, string htmlPart, byte[] file = null, bool hasFile = false, params string[] recipients)
         {
-            MailjetClient client = new MailjetClient(KEYS.KEY_PPUBLIC_MAILJET_API);
+            MailjetClient client = new MailjetClient(KEYS.KEY_PUBLIC_MAILJET_API, KEYS.KEY_PRIVATE_MAILJET_API);
 
+            //Tratando destinatários
+            var listEmailRecipients = new List<JObject>();
+            foreach (var recipientEmail in recipients)
+            {
+                listEmailRecipients.Add(new JObject { { "Email", recipientEmail } });
+            }
+
+            //Verificando se há anexo de arquivos
+            var Files = new List<JObject>();
+            if (hasFile)
+            {
+                if (file == null)
+                    throw new ApplicationException("Anexo não encontrado!");
+
+                var fileName = Guid.NewGuid().ToString().ToUpper().Replace("-", "").Substring(0, 15) + ".pdf";
+                Files.Add(new JObject { { "ContentType", "application/pdf" }, { "Filename", fileName }, { "Base64Content", file } });
+            }
+
+            //Disparando envio
             MailjetRequest request = new MailjetRequest { Resource = Send.Resource }
-            .Property(Send.FromEmail, "pedrophbc@live.com")
-            .Property(Send.FromName, "Mailjet Pilot")
-            .Property(Send.Subject, "Your email flight plan!")
-            .Property(Send.TextPart, "Dear passenger, welcome to Mailjet! May the delivery force be with you!")
-            .Property(Send.HtmlPart, "<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!")
-            .Property(Send.Recipients, new JArray {
-                new JObject {{"Email", "pedrosophbc@gmail.com"}}
-            });
+            .Property(Send.FromEmail, CONSTANTS.EMAIL_SENDER_ADDRESS)
+            .Property(Send.FromName, CONSTANTS.EMAIL_SENDER_NAME)
+            .Property(Send.Subject, subject)
+            .Property(Send.HtmlPart, htmlPart)
+            .Property(Send.Recipients, new JArray { listEmailRecipients })
+            .Property(Send.Attachments, new JArray { Files });
 
             MailjetResponse response = await client.PostAsync(request);
 

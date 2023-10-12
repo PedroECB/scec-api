@@ -16,12 +16,16 @@ namespace SCEC.API
             public const string SECRET_INTEGRATION = "####";
             public const string FLAG_YES = "S";
             public const string FLAG_NO = "N";
+            public const string EMAIL_SENDER_NAME = "SCEC - Sistema de Consulta de Entradas Cadavéricas";
+            public const string EMAIL_SENDER_ADDRESS = "pedrophbc@live.com";
         }
 
         public class KEYS
         {
             public const string KEY_EXTERNAL_API = "12$BASC2$#";
-            public const string KEY_PPUBLIC_MAILJET_API = "3dbe8ecf0294eed9f2eaa1abdcaa4407";
+            public const string KEY_PUBLIC_MAILJET_API = "3dbe8ecf0294eed9f2eaa1abdcaa4407";
+            public const string KEY_PRIVATE_MAILJET_API = "8d115ece2b8737900ffd197b115b32b6";
+
         }
 
         public class PATH
