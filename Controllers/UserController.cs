@@ -34,6 +34,8 @@ namespace SCEC.API.Controllers
         [HttpGet]
         [Route("All")]
         [Authorize(Roles = ROLES.ADMIN_AND_SUPERADMIN)]
+        [ResponseCache(VaryByHeader = "User-Agent", Location = ResponseCacheLocation.Any, Duration = 1200)] //Configurando cache pra 20 minutos
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)] //Desfazendo cache padrão, caso o cahe da aplicação esteja configurado no startup
         public async Task<ActionResult<IEnumerable<User>>> ListAll()
         {
             try
