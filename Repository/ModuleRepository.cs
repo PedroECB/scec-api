@@ -55,7 +55,7 @@ namespace SCEC.API.Repository
             IEnumerable<Module> parentModules = modulesRoles.Select(x => x.Module)
                 .Where(x => x.ParentId == null && x.Enabled.Equals(CONSTANTS.FLAG_YES))
                 .OrderBy(x => x.Order)
-                .Select(x => new Module { IdModule = x.IdModule, Description = x.Description, AliasFlag = x.AliasFlag, Nested = x.Nested, UrlBase = x.UrlBase })
+                .Select(x => new Module { IdModule = x.IdModule, Description = x.Description, AliasFlag = x.AliasFlag, Nested = x.Nested, UrlBase = x.UrlBase, Icon = x.Icon })
                 .ToList();
 
             foreach (Module parent in parentModules)
@@ -63,7 +63,7 @@ namespace SCEC.API.Repository
                 parent.Nested = modulesRoles.Select(x => x.Module)
                     .Where(x => x.ParentId == parent.IdModule)
                     .OrderBy(x => x.Order)
-                    .Select(x => new Module { IdModule = x.IdModule, Description = x.Description, AliasFlag = x.AliasFlag, Nested = x.Nested, UrlBase = x.UrlBase })
+                    .Select(x => new Module { IdModule = x.IdModule, Description = x.Description, AliasFlag = x.AliasFlag, Nested = x.Nested, UrlBase = x.UrlBase, Icon = x.Icon })
                     .ToList();
             }
 
