@@ -22,7 +22,8 @@ namespace SCEC.API.Services
                 {
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email.ToString()),
-                    new Claim(ClaimTypes.Role, user.Roles.ToString())
+                    new Claim(ClaimTypes.Role, user.Roles.ToString()),
+                    new Claim("cpf", "MEU_CPF_TESTE")
                 }),
                 Expires = DateTime.UtcNow.AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
