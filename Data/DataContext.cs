@@ -12,7 +12,7 @@ namespace SCEC.API.Data
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
-
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,9 +23,12 @@ namespace SCEC.API.Data
         public DbSet<User> Users {get; set;}
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UsersRoles { get; set; }
-        public DbSet<LogAcess> logAcesses { get; set; }
+        public DbSet<LogAcess> LogAcess { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<ModuleRole> ModulesRoles { get; set; }
         public DbSet<EmailModel> EmailModels { get; set; }
+        public DbSet<GroupUnity> GroupUnity { get; set; }
+        public DbSet<Address> Address { get; set; }
+
     }
 }

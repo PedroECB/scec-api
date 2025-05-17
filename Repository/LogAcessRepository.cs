@@ -20,7 +20,7 @@ namespace SCEC.API.Repository
 
         public async Task<LogAcess> Add(LogAcess log)
         {
-            _context.logAcesses.Add(log);
+            _context.LogAcess.Add(log);
             await _context.SaveChangesAsync();
             return log;
         }
