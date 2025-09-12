@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.ResponseCompression;
+using SCEC.API.Domain;
 
 namespace SCEC.API
 {
@@ -82,6 +83,8 @@ namespace SCEC.API
             services.AddScoped<ModuleRepository, ModuleRepository>();
             services.AddScoped<EmailModelRepository, EmailModelRepository>();
             services.AddScoped<GroupUnityRepository, GroupUnityRepository>();
+
+            services.AddScoped<LoginDomain>();
 
             services.AddSwaggerGen(c =>
             {

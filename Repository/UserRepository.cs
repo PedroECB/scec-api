@@ -32,9 +32,6 @@ namespace SCEC.API.Repository
 
         public async Task<User> Delete(User user)
         {
-            user.Enabled = CONSTANTS.FLAG_NO;
-            user.LastUpdate = DateTime.Now;
-
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return user;

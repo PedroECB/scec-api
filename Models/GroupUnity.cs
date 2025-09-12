@@ -26,7 +26,7 @@ namespace SCEC.API.Models
 
         [Column("id_address")]
         [ForeignKey("Address")]
-        public decimal IdAdress { get; set; }
+        public long IdAdress { get; set; }
         public Address Address { get; set; }
 
         [Column("created_at")]

@@ -2,6 +2,8 @@
 
 ### Sistema de registro e consulta de entradas cadavéricas em unidades de departamento de polícia técnica do estado da Bahia.
 
+###### Este projeto tem como objetivo colocar em prática conhecimentos de desenvolvimento web utilizando .NET. A aplicação servirá como um laboratório para explorar conceitos, padrões de projeto, boas práticas de arquitetura, integração com ferramentas e recursos comumente usados no dia a dia do desenvolvimento. O foco não é entregar uma solução de produção, mas sim um ambiente de aprendizado e experimentação, onde diferentes técnicas poderão ser testadas e avaliadas.
+
 > **Observação Importante:** Todas as informações contidas neste sistema são estritamente fictícias e foram criadas exclusivamente para fins de estudos relacionados à prática de desenvolvimento de software e de demonstração. Nenhuma das informações aqui apresentadas se refere a pessoas, entidades ou eventos reais. Qualquer semelhança com situações reais é puramente coincidência. Esta aplicação não tem a intenção de violar direitos de privacidade, direitos de imagem ou quaisquer outros direitos legais. Se você acredita que alguma informação aqui apresentada infringe seus direitos ou causa qualquer preocupação, entre em contato comigo imediatamente para que eu possa tomar as medidas adequadas. Agradeço a compreensão.
 
 **Visão geral:** O SCEC é um sistema integrado desenvolvido em parceria com a secretaria de segurança pública e o departamento de polícia técnica do estado da Bahia, visando registrar entradas cadavéricas em unidades distintas de departamento de polícia técnica, a fim de facilitar a rastreabilidade do fluxo de deslocamento cadavérico por agentes e facilitar a localização de entes desaparecidos pelo público externo em geral.
@@ -23,4 +25,4 @@
 - Auditoria de acessos (Registro de todas as ações realizadas na aplicação para fins de auditoria e conformidade);
 
 #### API
-    .NET CORE 3.1  (PRETENSÃO PROPOSITAL DE MIGRAÇÃO PARA .NET 8.0)
+    .NET CORE 3.1  (PRETENSÃO PROPOSITAL DE MIGRAÇÃO PARA .NET 8.0) ✅

@@ -114,6 +114,9 @@ namespace SCEC.API.Controllers
                 if (user == null || user.Enabled == CONSTANTS.FLAG_NO)
                     return BadRequest(new { Message = "Falha ao inativar usuário! Usuário não encontrado." });
 
+                user.Enabled = CONSTANTS.FLAG_NO;
+                user.LastUpdate = DateTime.Now;
+
                 await _userRepository.Delete(user);
 
                 return Ok(new { Message = "Usuário inativado com sucesso!" });
